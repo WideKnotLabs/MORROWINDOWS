@@ -564,7 +564,11 @@ function initializeContextMenu() {
     const systemSettings = document.getElementById('system-settings');
     if (systemSettings) {
         systemSettings.addEventListener('click', () => {
-            showNotification('System Settings', 'The ancient settings are being deciphered. Try again later!', 'warning');
+            if (window.systemSettingsApp && window.systemSettingsApp.open) {
+                window.systemSettingsApp.open();
+            } else {
+                showNotification('System Settings', 'The system settings app is not available.', 'error');
+            }
             hideContextMenu();
         });
     }

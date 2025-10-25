@@ -672,11 +672,13 @@ class TaskbarManager {
     }
 
     showSystemSettings() {
-        if (window.MorrowindOS && window.MorrowindOS.showNotification) {
+        if (window.systemSettingsApp && window.systemSettingsApp.open) {
+            window.systemSettingsApp.open();
+        } else if (window.MorrowindOS && window.MorrowindOS.showNotification) {
             window.MorrowindOS.showNotification(
-                'System Settings', 
-                'The ancient settings are being deciphered. Try again later!', 
-                'warning'
+                'System Settings',
+                'The system settings app is not available.',
+                'error'
             );
         }
     }
