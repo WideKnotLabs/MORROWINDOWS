@@ -672,8 +672,8 @@ class TaskbarManager {
     }
 
     showSystemSettings() {
-        if (window.systemSettingsApp && window.systemSettingsApp.open) {
-            window.systemSettingsApp.open();
+        if (window.MorrowindOS && window.MorrowindOS.openApp) {
+            window.MorrowindOS.openApp('system-settings');
         } else if (window.MorrowindOS && window.MorrowindOS.showNotification) {
             window.MorrowindOS.showNotification(
                 'System Settings',

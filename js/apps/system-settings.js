@@ -1,9 +1,10 @@
 // Morrowind-OwS System Settings App
 class SystemSettingsApp {
     constructor() {
-        this.windowId = 'system-settings';
+        this.windowId = null;
         this.window = null;
         this.isActive = false;
+        this._originalOnWindowClose = null;
     }
 
     init() {
@@ -11,56 +12,95 @@ class SystemSettingsApp {
         console.log('System Settings App initialized');
     }
 
-    open() {
+    open(windowId) {
+        if (!windowId) {
+            if (this.windowId) {
+                window.windowManager.focusWindow(this.windowId);
+            } else {
+                console.error('System Settings App: missing windowId.');
+            }
+            return;
+        }
+
+        if (!window.windowManager) {
+            console.error('System Settings App: window manager not available.');
+            return;
+        }
+
+        this.windowId = windowId;
+        this.window = window.windowManager.getWindow(windowId);
+
+        if (!this.window) {
+            console.error(`System Settings App: window ${windowId} not found.`);
+            return;
+        }
+
         if (this.isActive) {
-            // Focus existing window
             window.windowManager.focusWindow(this.windowId);
             return;
         }
 
-        // Create the settings window
-        this.createSettingsWindow();
-        this.setupEventListeners();
-        this.loadSavedSettings();
-        this.populateDefaultVoices();
-        this.isActive = true;
-    }
-
-    createSettingsWindow() {
-        const content = document.getElementById('system-settings-window').innerHTML;
-        
-        this.window = window.windowManager.createWindow({
-            id: this.windowId,
-            title: 'System Settings',
-            content: content,
-            width: 700,
-            height: 600,
-            minWidth: 600,
-            minHeight: 500,
-            resizable: true,
-            closable: true,
-            minimizable: true,
-            maximizable: true,
-            className: 'system-settings-window',
-            logo: 'settings-icon'
-        });
-
-        // Add to taskbar
-        if (window.taskbarManager) {
-            window.taskbarManager.addTaskbarItem(this.windowId, {
-                name: 'System Settings',
-                icon: 'settings-icon'
-            });
+        if (!this.initializeWindowContent()) {
+            return;
         }
 
-        // Handle window close
-        const originalOnClose = this.window.onWindowClose;
-        this.window.onWindowClose = (windowId) => {
-            if (windowId === this.windowId) {
-                this.isActive = false;
-                if (originalOnClose) originalOnClose(windowId);
+        this.setupEventListeners();
+        this.loadSavedSettings();
+        this.registerCloseHandler();
+
+        this.isActive = true;
+        window.windowManager.focusWindow(this.windowId);
+    }
+
+    initializeWindowContent() {
+        const template = document.getElementById('system-settings-window');
+        const contentElement = document.getElementById(`${this.windowId}-content`);
+
+        if (!template || !contentElement) {
+            console.error('System Settings App: failed to locate template or content container.');
+            return false;
+        }
+
+        contentElement.innerHTML = template.innerHTML.trim();
+        contentElement.scrollTop = 0;
+
+        if (this.window && this.window.element) {
+            this.window.element.classList.add('system-settings-window');
+        }
+
+        return true;
+    }
+
+    registerCloseHandler() {
+        if (!this.window || !this.window.element) return;
+
+        const handleClose = () => {
+            this.isActive = false;
+            this.window = null;
+            this.windowId = null;
+
+            if (this._originalOnWindowClose) {
+                window.windowManager.onWindowClose = this._originalOnWindowClose;
+                this._originalOnWindowClose = null;
             }
         };
+
+        const closeButton = this.window.element.querySelector('.window-control.close');
+        if (closeButton) {
+            closeButton.addEventListener('click', handleClose, { once: true });
+        }
+
+        if (!this._originalOnWindowClose && window.windowManager) {
+            const originalOnWindowClose = window.windowManager.onWindowClose.bind(window.windowManager);
+            this._originalOnWindowClose = originalOnWindowClose;
+
+            window.windowManager.onWindowClose = (windowId) => {
+                if (windowId === this.windowId) {
+                    handleClose();
+                }
+                originalOnWindowClose(windowId);
+            };
+        }
     }
 
     setupEventListeners() {
@@ -167,35 +207,6 @@ class SystemSettingsApp {
         if (customVoiceIdsTextarea) {
             customVoiceIdsTextarea.value = customVoiceIds;
         }
-    }
-
-    populateDefaultVoices() {
-        const windowElement = this.window.element;
-        const defaultVoicesList = windowElement.querySelector('#default-voices-list');
-        
-        if (!defaultVoicesList || !window.ElevenLabsService) return;
-        
-        const voices = window.ElevenLabsService.getVoicePool();
-        defaultVoicesList.innerHTML = '';
-        
-        voices.forEach(voice => {
-            const voiceItem = document.createElement('div');
-            voiceItem.className = 'voice-item';
-            voiceItem.innerHTML = `
-                <div class="voice-info">
-                    <div class="voice-name">${voice.name}</div>
-                    <div class="voice-details">ID: ${voice.id} | ${voice.gender} | ${voice.accent}</div>
-                </div>
-                <button class="btn btn-primary voice-test-btn" data-voice-id="${voice.id}">Test</button>
-            `;
-            
-            const testBtn = voiceItem.querySelector('.voice-test-btn');
-            testBtn.addEventListener('click', () => {
-                this.testVoice(voice.id);
-            });
-            
-            defaultVoicesList.appendChild(voiceItem);
-        });
     }
 
     saveOpenAIKey() {
@@ -429,10 +440,11 @@ if (!window.AppRegistry) {
     window.AppRegistry = {};
 }
 
+const existingConfig = window.AppRegistry['system-settings'] || {};
+
 window.AppRegistry['system-settings'] = {
-    name: 'System Settings',
-    icon: 'settings-icon',
-    open: () => systemSettingsApp.open()
+    ...existingConfig,
+    open: (windowId) => systemSettingsApp.open(windowId)
 };
 
 // Export for use in other files

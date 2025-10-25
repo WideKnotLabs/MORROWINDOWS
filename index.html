@@ -196,82 +196,70 @@
     
     <!-- System Settings Window (hidden by default) -->
     <div id="system-settings-window" class="hidden">
-        <div class="window">
-            <div class="window-header">
-                <div class="window-header-left">
-                    <div class="window-logo settings-icon"></div>
-                    <div class="window-title">System Settings</div>
-                </div>
-                <div class="window-controls">
-                    <div class="window-control minimize" data-action="minimize"></div>
-                    <div class="window-control maximize" data-action="maximize"></div>
-                    <div class="window-control close" data-action="close"></div>
-                </div>
+        <div class="settings-layout">
+            <header class="settings-header">
+                <h2 class="settings-title">System Settings</h2>
+                <p class="settings-description">Configure the integrations that power your mystical workspace.</p>
+            </header>
+
+            <div class="tabs settings-tabs">
+                <div class="tab active" data-tab="api-keys">API Keys</div>
+                <div class="tab" data-tab="voice-ids">Voice IDs</div>
             </div>
-            <div class="window-content">
-                <div class="tabs">
-                    <div class="tab active" data-tab="api-keys">API Keys</div>
-                    <div class="tab" data-tab="voice-ids">Voice IDs</div>
+
+            <div class="settings-content">
+                <div class="settings-global-warning">
+                    <div class="api-security-warning">
+                        <p><strong>Security Notice:</strong> Your API keys are stored only in this browser's session storage and are never sent anywhere except directly to the OpenAI or ElevenLabs APIs.</p>
+                    </div>
                 </div>
-                
-                <!-- API Keys Tab -->
                 <div class="tab-content active" id="api-keys-tab">
-                    <div class="card">
-                        <div class="card-header">OpenAI API Key</div>
-                        <div class="card-content">
-                            <p class="mb-10">Enter your OpenAI API key to enable AI-powered features in OuijaGPT and Scrolldit.</p>
-                            <div class="api-security-warning">
-                                <p><strong>Security Notice:</strong> Your API key is stored only in your browser's session storage and is never sent to any server other than OpenAI's API.</p>
-                            </div>
-                            <div class="mt-20">
-                                <label for="openai-api-key" class="block mb-5">API Key:</label>
-                                <input type="password" id="openai-api-key" class="input w-full" placeholder="sk-...">
-                                <div class="mt-10">
-                                    <button id="save-openai-key" class="btn btn-primary">Save Key</button>
-                                    <button id="test-openai-key" class="btn ml-10">Test Connection</button>
+                    <div class="settings-grid">
+                        <div class="card">
+                            <div class="card-header">OpenAI API Key</div>
+                            <div class="card-content">
+                                <p class="mb-10">Enter your OpenAI API key to enable AI-powered features in OuijaGPT and Scrolldit.</p>
+                                <div class="mt-20">
+                                    <label for="openai-api-key" class="block mb-5">API Key:</label>
+                                    <input type="password" id="openai-api-key" class="input w-full" placeholder="sk-...">
+                                    <div class="settings-actions mt-10">
+                                        <button id="save-openai-key" class="btn btn-primary">Save Key</button>
+                                        <button id="test-openai-key" class="btn">Test Connection</button>
+                                    </div>
+                                    <div id="openai-status" class="mt-10"></div>
                                 </div>
-                                <div id="openai-status" class="mt-10"></div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">ElevenLabs API Key</div>
+                            <div class="card-content">
+                                <p class="mb-10">Provide your ElevenLabs API key to unlock narration inside Laudify and WraithsApp.</p>
+                                <div class="mt-20">
+                                    <label for="elevenlabs-api-key" class="block mb-5">API Key:</label>
+                                    <input type="password" id="elevenlabs-api-key" class="input w-full" placeholder="Your ElevenLabs API key">
+                                    <div class="settings-actions mt-10">
+                                        <button id="save-elevenlabs-key" class="btn btn-primary">Save Key</button>
+                                        <button id="test-elevenlabs-key" class="btn">Test Connection</button>
+                                    </div>
+                                    <div id="elevenlabs-status" class="mt-10"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                
-                <!-- Voice IDs Tab -->
+
                 <div class="tab-content" id="voice-ids-tab">
                     <div class="card">
-                        <div class="card-header">ElevenLabs Voice Configuration</div>
+                        <div class="card-header">ElevenLabs Voices</div>
                         <div class="card-content">
-                            <p class="mb-10">Configure voice IDs for the WraithsApp text-to-speech functionality.</p>
-                            <div class="api-security-warning">
-                                <p><strong>Security Notice:</strong> Your API key is stored only in your browser's session storage and is never sent to any server other than ElevenLabs' API.</p>
+                            <p class="mb-10">Add custom ElevenLabs voice IDs from the <strong>My Voices</strong> section of your ElevenLabs dashboard. Enter one voice ID per line.</p>
+                            <textarea id="custom-voice-ids" class="textarea w-full" rows="5" placeholder="Enter voice IDs, one per line..."></textarea>
+                            <div class="settings-actions mt-10">
+                                <button id="save-voice-ids" class="btn btn-primary">Save Voice IDs</button>
+                                <button id="test-voice" class="btn">Test Random Voice</button>
                             </div>
-                            <div class="mt-20">
-                                <label for="elevenlabs-api-key" class="block mb-5">ElevenLabs API Key:</label>
-                                <input type="password" id="elevenlabs-api-key" class="input w-full" placeholder="Your ElevenLabs API key">
-                                <div class="mt-10">
-                                    <button id="save-elevenlabs-key" class="btn btn-primary">Save Key</button>
-                                    <button id="test-elevenlabs-key" class="btn ml-10">Test Connection</button>
-                                </div>
-                                <div id="elevenlabs-status" class="mt-10"></div>
-                            </div>
-                            
-                            <div class="mt-20">
-                                <h3 class="mb-10">Custom Voice IDs</h3>
-                                <p class="mb-10">Add custom ElevenLabs voice IDs to use in WraithsApp. Enter one voice ID per line.</p>
-                                <textarea id="custom-voice-ids" class="textarea w-full" rows="6" placeholder="Enter voice IDs, one per line..."></textarea>
-                                <div class="mt-10">
-                                    <button id="save-voice-ids" class="btn btn-primary">Save Voice IDs</button>
-                                    <button id="test-voice" class="btn ml-10">Test Random Voice</button>
-                                </div>
-                                <div id="voice-status" class="mt-10"></div>
-                            </div>
-                            
-                            <div class="mt-20">
-                                <h3 class="mb-10">Available Default Voices</h3>
-                                <div class="list" id="default-voices-list">
-                                    <!-- Default voices will be populated here -->
-                                </div>
-                            </div>
+                            <div id="voice-status" class="mt-10"></div>
                         </div>
                     </div>
                 </div>

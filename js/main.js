@@ -88,6 +88,17 @@ const AppRegistry = {
         minHeight: 500,
         resizable: true
     },
+    'system-settings': {
+        name: 'System Settings',
+        icon: 'settings-icon',
+        logo: 'settings-icon',
+        title: 'System Settings',
+        width: 700,
+        height: 600,
+        minWidth: 600,
+        minHeight: 500,
+        resizable: true
+    }
 };
 
 // Get responsive app dimensions based on screen size
@@ -564,8 +575,8 @@ function initializeContextMenu() {
     const systemSettings = document.getElementById('system-settings');
     if (systemSettings) {
         systemSettings.addEventListener('click', () => {
-            if (window.systemSettingsApp && window.systemSettingsApp.open) {
-                window.systemSettingsApp.open();
+            if (window.MorrowindOS && window.MorrowindOS.openApp) {
+                window.MorrowindOS.openApp('system-settings');
             } else {
                 showNotification('System Settings', 'The system settings app is not available.', 'error');
             }
@@ -904,6 +915,14 @@ function saveState() {
 function bootAppWindow(appName, windowId) {
     console.log(`Initializing app: ${appName} in window: ${windowId}`);
 
+    // Special handling for system settings app
+    if (appName === 'system-settings') {
+        if (window.systemSettingsApp && window.systemSettingsApp.open) {
+            window.systemSettingsApp.open(windowId);
+        }
+        return;
+    }
+
     // Load app content
     const contentElement = document.getElementById(`${windowId}-content`);
     if (contentElement) {
@@ -1000,6 +1019,7 @@ function switchWindow() {
 // Export for use in other files
 window.MorrowindOS = MorrowindOS;
 window.MorrowindOS.showNotification = showNotification;
+window.MorrowindOS.openApp = openApp;
 window.AppRegistry = AppRegistry;
 
 // Initialize session cleanup for API keys
