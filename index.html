@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Morrowindows - Fantasy Operating System</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/taskbar-items.css">
+    <link rel="stylesheet" href="css/apps.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Crimson+Text:wght@400;600&family=Cutive+Mono&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="public/favicon_io/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="public/favicon_io/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="public/favicon_io/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="public/favicon_io/favicon-16x16.png">
+    <link rel="manifest" href="public/favicon_io/site.webmanifest">
+</head>
+<body>
+    <!-- Desktop Container -->
+    <div id="desktop">
+        <!-- Wallpaper Background -->
+        <div id="wallpaper"></div>
+        
+        <!-- Desktop Icons Container -->
+        <div id="desktop-icons">
+            <div class="desktop-icon" data-app="scrolldit">
+                <div class="icon-image scrolldit-icon"></div>
+                <div class="icon-label">Scrolldit</div>
+            </div>
+            <div class="desktop-icon" data-app="ouijagpt">
+                <div class="icon-image ouijagpt-icon"></div>
+                <div class="icon-label">OuijaGPT</div>
+            </div>
+            <div class="desktop-icon" data-app="timber">
+                <div class="icon-image timber-icon"></div>
+                <div class="icon-label">Timber</div>
+            </div>
+            <div class="desktop-icon" data-app="wraiths">
+                <div class="icon-image wraiths-icon"></div>
+                <div class="icon-label">WraithsApp</div>
+            </div>
+            <div class="desktop-icon" data-app="abacus">
+                <div class="icon-image abacus-icon"></div>
+                <div class="icon-label">Abacus</div>
+            </div>
+            <div class="desktop-icon" data-app="laudify">
+                <div class="icon-image laudify-icon"></div>
+                <div class="icon-label">Laudify</div>
+            </div>
+        </div>
+        
+        <!-- Windows Container -->
+        <div id="windows-container"></div>
+        
+        <!-- Taskbar -->
+        <div id="taskbar">
+            <div id="taskbar-left">
+                <div id="start-menu" class="taskbar-button">
+                    <div class="start-menu-icon"></div>
+                </div>
+                <div id="quick-launch"></div>
+            </div>
+            <div id="taskbar-center"></div>
+            <div id="taskbar-right">
+                <div id="system-tray">
+                    <div class="system-tray-icon" id="notification-icon"></div>
+                    <div class="system-tray-icon" id="network-icon"></div>
+                    <div class="system-tray-icon" id="volume-icon"></div>
+                </div>
+                <div id="clock">00:00</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Context Menu (hidden by default) -->
+    <div id="context-menu" class="hidden">
+        <div class="context-menu-item" id="refresh-desktop">Refresh Desktop</div>
+        <div class="context-menu-item" id="change-wallpaper">Change Wallpaper</div>
+        <div class="context-menu-separator"></div>
+        <div class="context-menu-item" id="open-terminal">Open Terminal</div>
+        <div class="context-menu-item" id="system-settings">System Settings</div>
+    </div>
+    
+    <!-- Start Menu (hidden by default) -->
+    <div id="start-menu-panel" class="hidden">
+        <div class="start-menu-header">
+            <div class="start-menu-title">Morrowindows</div>
+            <div class="start-menu-subtitle">Fantasy Operating System</div>
+        </div>
+        <div class="start-menu-apps">
+            <div class="start-menu-app" data-app="scrolldit">
+                <div class="start-menu-app-icon scrolldit-icon"></div>
+                <div class="start-menu-app-label">Scrolldit</div>
+            </div>
+            <div class="start-menu-app" data-app="ouijagpt">
+                <div class="start-menu-app-icon ouijagpt-icon"></div>
+                <div class="start-menu-app-label">OuijaGPT</div>
+            </div>
+            <div class="start-menu-app" data-app="timber">
+                <div class="start-menu-app-icon timber-icon"></div>
+                <div class="start-menu-app-label">Timber</div>
+            </div>
+            <div class="start-menu-app" data-app="wraiths">
+                <div class="start-menu-app-icon wraiths-icon"></div>
+                <div class="start-menu-app-label">WraithsApp</div>
+            </div>
+            <div class="start-menu-app" data-app="abacus">
+                <div class="start-menu-app-icon abacus-icon"></div>
+                <div class="start-menu-app-label">Abacus</div>
+            </div>
+            <div class="start-menu-app" data-app="laudify">
+                <div class="start-menu-app-icon laudify-icon"></div>
+                <div class="start-menu-app-label">Laudify</div>
+            </div>
+        </div>
+        <div class="start-menu-footer">
+            <div class="start-menu-footer-item" id="system-settings-btn">System Settings</div>
+            <div class="start-menu-footer-item" id="shutdown-btn">Shut Down</div>
+        </div>
+    </div>
+    
+    <!-- Notification Panel (hidden by default) -->
+    <div id="notification-panel" class="hidden">
+        <div class="notification-panel-header">
+            <div class="notification-panel-title">Notifications</div>
+        </div>
+        <div class="notification-panel-content">
+            <div class="notification-option" id="notifications-active">
+                <div class="notification-option-icon">🔔</div>
+                <div class="notification-option-text">Notifications active</div>
+            </div>
+            <div class="notification-option" id="notifications-disabled">
+                <div class="notification-option-icon">🔕</div>
+                <div class="notification-option-text">Notifications shall not pass</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- WiFi Panel (hidden by default) -->
+    <div id="wifi-panel" class="hidden">
+        <div class="wifi-panel-header">
+            <div class="wifi-panel-title">Network Connections</div>
+        </div>
+        <div class="wifi-panel-content">
+            <div class="wifi-network current" data-ssid="Brawl Tavern">
+                <div class="wifi-network-icon">🔗</div>
+                <div class="wifi-network-info">
+                    <div class="wifi-network-name">Brawl Tavern</div>
+                    <div class="wifi-network-status">Connected</div>
+                </div>
+                <div class="wifi-network-signal">●●●●●</div>
+            </div>
+            <div class="wifi-network" data-ssid="Misty Mountains">
+                <div class="wifi-network-icon">🌫</div>
+                <div class="wifi-network-info">
+                    <div class="wifi-network-name">Misty Mountains</div>
+                    <div class="wifi-network-status">Available</div>
+                </div>
+                <div class="wifi-network-signal">●●●</div>
+            </div>
+            <div class="wifi-network" data-ssid="Dragon's Lair">
+                <div class="wifi-network-icon">🐉</div>
+                <div class="wifi-network-info">
+                    <div class="wifi-network-name">Dragon's Lair</div>
+                    <div class="wifi-network-status">Secured</div>
+                </div>
+                <div class="wifi-network-signal">●●●●</div>
+            </div>
+            <div class="wifi-network" data-ssid="Elven Woods">
+                <div class="wifi-network-icon">🧝</div>
+                <div class="wifi-network-info">
+                    <div class="wifi-network-name">Elven Woods</div>
+                    <div class="wifi-network-status">Available</div>
+                </div>
+                <div class="wifi-network-signal">●●</div>
+            </div>
+            <div class="wifi-network" data-ssid="D&D Portal">
+                <div class="wifi-network-icon">🎲</div>
+                <div class="wifi-network-info">
+                    <div class="wifi-network-name">D&D Portal</div>
+                    <div class="wifi-network-status">Secured</div>
+                </div>
+                <div class="wifi-network-signal">●●●●</div>
+            </div>
+            <div class="wifi-network" data-ssid="Hobbit's Hole">
+                <div class="wifi-network-icon">🏚</div>
+                <div class="wifi-network-info">
+                    <div class="wifi-network-name">Hobbit's Hole</div>
+                    <div class="wifi-network-status">Available</div>
+                </div>
+                <div class="wifi-network-signal">●</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Loading Screen (shown initially) -->
+    <div id="loading-screen">
+        <div class="loading-content">
+            <div class="loading-logo"></div>
+            <div class="loading-text">Morrowindows</div>
+            <div class="loading-subtitle">Consulting the ancient spirits...</div>
+            <div class="loading-progress">
+                <div class="loading-progress-bar"></div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="js/main.js"></script>
+    <script src="js/window-manager.js"></script>
+    <script src="js/taskbar.js"></script>
+    <script src="js/services/world-context-service.js"></script>
+    <script src="js/services/openai-service.js"></script>
+    <script src="js/services/elevenlabs-service.js"></script>
+    <script src="js/apps/scrolldit.js"></script>
+    <script src="js/apps/ouijagpt.js"></script>
+    <script src="js/apps/timber.js"></script>
+    <script src="js/apps/wraiths.js"></script>
+    <script src="js/apps/abacus.js"></script>
+    <script src="js/apps/laudify.js"></script>
+</body>
+</html>

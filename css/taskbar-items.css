@@ -1,0 +1,83 @@
+/* Morrowind-OwS Taskbar Items Styles */
+
+.taskbar-item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 6px 10px;
+    border-radius: 8px;
+    cursor: var(--cursor-pointer);
+    transition: all 0.3s ease;
+    position: relative;
+    min-width: 0;
+    max-width: 150px;
+    background: rgba(16, 26, 21, 0.4);
+    border: 1px solid rgba(216, 188, 120, 0.2);
+    flex-shrink: 0;
+}
+
+.taskbar-item:hover {
+    background: linear-gradient(145deg, rgba(47, 70, 58, 0.5), rgba(28, 44, 36, 0.6));
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(6, 10, 24, 0.38);
+    border-color: rgba(216, 188, 120, 0.4);
+}
+
+.taskbar-item.active {
+    background: linear-gradient(145deg, rgba(140, 107, 62, 0.5), rgba(47, 70, 58, 0.4));
+    box-shadow: 0 0 18px rgba(216, 188, 120, 0.4);
+    border: 1px solid rgba(216, 188, 120, 0.5);
+}
+
+.taskbar-item.minimized {
+    opacity: 0.7;
+}
+
+.taskbar-item-icon {
+    width: 24px;
+    height: 24px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    margin-right: 8px;
+    filter: drop-shadow(0 0 3px rgba(216, 188, 120, 0.3));
+    flex-shrink: 0;
+}
+
+.taskbar-item-label {
+    font-size: 12px;
+    text-align: left;
+    font-family: 'Cinzel', serif;
+    color: var(--parchment);
+    text-shadow: 0 0 6px rgba(6, 10, 9, 0.7);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex-grow: 1;
+    min-width: 0;
+}
+
+/* Mobile Responsive Taskbar Items */
+@media (max-width: 768px) {
+    .taskbar-item {
+        padding: 4px 6px;
+        min-width: 50px;
+    }
+    
+    .taskbar-item-label {
+        font-size: 9px;
+        margin-top: 1px;
+    }
+}
+
+@media (max-width: 480px) {
+    .taskbar-item {
+        padding: 3px 4px;
+        min-width: 45px;
+    }
+    
+    .taskbar-item-label {
+        font-size: 8px;
+        margin-top: 1px;
+    }
+}
