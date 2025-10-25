@@ -2,6 +2,21 @@
 
 A mystical operating system inspired by Morrowind, featuring a dark fantasy high elf aesthetic with magical apps and interactions.
 
+## Project Overview
+
+Morrowindows is a fully functional web-based operating system that brings the mystical world of Morrowind to your browser. It features a complete desktop environment with draggable windows, a taskbar, context menus, and six unique applications that demonstrate various web development capabilities while maintaining an immersive fantasy experience throughout.
+
+The project is built with modern web technologies and follows best practices for security, particularly around API key management, making it safe for deployment on platforms like GitHub Pages.
+
+## Key Features
+
+- **Complete Desktop Environment**: Fully functional OS interface with window management, taskbar, and system controls
+- **Six Unique Applications**: Each app demonstrates different web technologies and use cases
+- **Immersive Fantasy Theme**: Consistent Morrowind-inspired design throughout the entire experience
+- **Secure API Integration**: Session-based API key storage with automatic cleanup
+- **Responsive Design**: Adapts to different screen sizes and devices
+- **Modern Web Technologies**: Built with HTML5, CSS3, and JavaScript ES6+
+
 ## Features
 
 ### Core System
@@ -13,42 +28,46 @@ A mystical operating system inspired by Morrowind, featuring a dark fantasy high
 
 ### Applications
 
-1. **Spellbook** - A magical notes application for storing arcane knowledge
-   - Create, edit, and delete notes
-   - Auto-save functionality
-   - Export notes as JSON files
-   - Search through notes
+1. **OuijaGPT (Oracle)** - A mystical AI-powered divination app
+   - Interactive chat interface with ChatGPT integration
+   - Fantasy-themed responses and styling
+   - Conversation history tracking
+   - Secure API key management with session storage
+   - Responsive design for mobile and desktop
 
-2. **Oracle** - A ChatGPT-powered divination app
-   - Ask questions to a mystical AI oracle
-   - Conversation history
-   - Fantasy-themed responses
-   - API key configuration
+2. **WraithsApp (Whispering Stone)** - A WhatsApp-style group chat app
+   - Multiple fantasy-themed chat groups with unique NPCs
+   - AI-generated character responses based on personality profiles
+   - Optional voice synthesis using ElevenLabs API
+   - Real-time message updates with auto-refresh
+   - Customizable settings for voice chance and event frequency
 
-3. **Whispering Stone** - A voice communication app (ElevenLabs integration)
-   - Dialer interface with fantasy styling
-   - Contact management
-   - Call history
-   - Voice synthesis capabilities
+3. **Scrolldit (The Elder Scroll)** - A Reddit-style social media app
+   - Fantasy-themed posts and comments
+   - AI-generated content using OpenAI
+   - Upvoting system
+   - Multiple subscrolls (subreddits) with different themes
+   - Character-based replies with unique personalities
 
-4. **Fated Encounters** - A mystical dating app
-   - 20 unique fantasy characters with detailed profiles
-   - Swipe interface to accept or reject matches
-   - Compatibility system based on elemental affinities
-   - Match history
+4. **Timber** - A Dark Souls-inspired game
+   - Turn-based combat mechanics
+   - Multiple enemy types with increasing difficulty
+   - Dice rolling for combat calculations
+   - Victory and defeat screens with fantasy styling
+   - Sound effects and animations
 
-5. **The Elder Scroll** - A Reddit-style social media app
-   - Create posts with AI-generated content
-   - Upvote and comment system
-   - Fantasy-themed posts and interactions
-   - Post history
+5. **Abacus** - A mystical calculator app
+   - Basic arithmetic operations with fantasy theme
+   - Historical calculation tracking
+   - Animated number transitions
+   - Fantasy-themed button design
 
-6. **Dungeons & Dragons Minigame** - A fantasy RPG game
-   - 6 character classes (Warrior, Mage, Rogue, Cleric, Ranger, Paladin)
-   - Turn-based combat system
-   - Dice rolling mechanics
-   - Enemy encounters with different difficulty levels
-   - Victory and defeat screens
+6. **Laudify** - A mystical music player
+   - Built-in fantasy soundtrack
+   - Playlist management
+   - Audio controls with custom styling
+   - Visual feedback during playback
+   - Responsive player interface
 
 ## Technical Implementation
 
@@ -73,6 +92,31 @@ A mystical operating system inspired by Morrowind, featuring a dark fantasy high
 ## Installation
 
 1. Clone or download the repository
+
+## Technical Architecture
+
+### Security-First Design
+Morrowindows is built with security as a primary consideration, especially around API key management:
+
+- **Session-Based Storage**: API keys are stored in sessionStorage, not localStorage
+- **Automatic Cleanup**: Keys are cleared when browser tab/window closes
+- **No Server Storage**: Keys never touch our servers
+- **Client-Side Only**: API calls made directly from user's browser
+- **Transparent Warnings**: Users are clearly informed about key handling
+
+### Modern Web Standards
+- **HTML5 Semantic Markup**: Proper document structure for accessibility
+- **CSS3 with Custom Properties**: Maintainable theming system
+- **JavaScript ES6+**: Modern syntax with modular architecture
+- **Responsive Design**: Mobile-first approach with progressive enhancement
+- **Event-Driven Architecture**: Loose coupling between components
+- **Component-Based Apps**: Each application is self-contained
+
+### Performance Optimizations
+- **Lazy Loading**: Apps load content only when needed
+- **Efficient DOM Manipulation**: Minimal reflows and repaints
+- **Optimized Animations**: CSS transforms for smooth 60fps animations
+- **Memory Management**: Proper cleanup of event listeners and objects
 2. Open `index.html` in a modern web browser
 3. No additional setup required
 

@@ -9,7 +9,7 @@ class WraithsApp {
         this.isLoading = false;
         this.autoRefreshInterval = null;
         this.lastRefreshTime = {};
-        
+
         // Default settings
         this.settings = {
             voiceChance: 40,
@@ -20,7 +20,7 @@ class WraithsApp {
             maxWords: 18,
             voiceIds: [] // Array to store custom VoiceIDs
         };
-        
+
         this.loadChats();
         this.loadSettings();
         this.initializeUI();
@@ -83,11 +83,11 @@ class WraithsApp {
     }
 
     checkAPIKeys() {
-        const hasOpenAIKey = sessionStorage.getItem('openai-api-key') || 
-                            window.MorrowindOS.config?.openaiApiKey;
-        const hasElevenLabsKey = sessionStorage.getItem('elevenlabs-api-key') || 
-                                window.MorrowindOS.config?.elevenlabsApiKey;
-        
+        const hasOpenAIKey = sessionStorage.getItem('openai-api-key') ||
+            window.MorrowindOS.config?.openaiApiKey;
+        const hasElevenLabsKey = sessionStorage.getItem('elevenlabs-api-key') ||
+            window.MorrowindOS.config?.elevenlabsApiKey;
+
         if (!hasOpenAIKey) {
             setTimeout(() => this.showSettingsModal(), 1000);
         }
@@ -99,6 +99,9 @@ class WraithsApp {
         modal.innerHTML = `
             <div class="modal-content animate-scale-in">
                 <div class="modal-header">WraithsApp Configuration</div>
+                    <div class="api-security-warning">
+                        <p><strong>⚠️ Security Notice:</strong> Your API keys will be stored in browser session storage and automatically cleared when you close this tab. Keys are never stored on our servers.</p>
+                    </div>
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="openai-key-input">OpenAI API Key:</label>
@@ -145,9 +148,9 @@ class WraithsApp {
                 </div>
             </div>
         `;
-        
+
         document.body.appendChild(modal);
-        
+
         // Setup event listeners
         const voiceChanceSlider = document.getElementById('voice-chance-slider');
         const voiceChanceValue = document.getElementById('voice-chance-value');
@@ -157,31 +160,31 @@ class WraithsApp {
         const refreshIntervalValue = document.getElementById('refresh-interval-value');
         const eventFrequencySlider = document.getElementById('event-frequency-slider');
         const eventFrequencyValue = document.getElementById('event-frequency-value');
-        
+
         voiceChanceSlider.addEventListener('input', (e) => {
             voiceChanceValue.textContent = e.target.value + '%';
         });
-        
+
         autoRefreshCheckbox.addEventListener('change', (e) => {
             refreshIntervalGroup.style.display = e.target.checked ? 'block' : 'none';
         });
-        
+
         refreshIntervalSlider.addEventListener('input', (e) => {
             refreshIntervalValue.textContent = e.target.value + 's';
         });
-        
+
         eventFrequencySlider.addEventListener('input', (e) => {
             eventFrequencyValue.textContent = e.target.value + '%';
         });
-        
+
         document.getElementById('cancel-settings').addEventListener('click', () => {
             modal.remove();
         });
-        
+
         document.getElementById('save-settings').addEventListener('click', () => {
             this.saveSettings(modal);
         });
-        
+
         // Close on background click
         modal.addEventListener('click', (e) => {
             if (e.target === modal) {
@@ -194,39 +197,39 @@ class WraithsApp {
         const openAIKey = document.getElementById('openai-key-input').value.trim();
         const elevenLabsKey = document.getElementById('elevenlabs-key-input').value.trim();
         const voiceIdsInput = document.getElementById('voice-ids-input').value.trim();
-        
+
         if (openAIKey && OpenAIService.saveAPIKey(openAIKey)) {
             sessionStorage.setItem('openai-api-key', openAIKey);
         }
-        
+
         if (elevenLabsKey) {
             sessionStorage.setItem('elevenlabs-api-key', elevenLabsKey);
         }
-        
+
         // Process VoiceIDs
         let voiceIds = [];
         if (voiceIdsInput) {
             voiceIds = voiceIdsInput.split(',').map(id => id.trim()).filter(id => id.length > 0);
-            
+
             // Limit to maximum of 10 VoiceIDs
             if (voiceIds.length > 10) {
                 voiceIds = voiceIds.slice(0, 10);
                 window.MorrowindOS.showNotification('Warning', 'Only the first 10 Voice IDs will be used.', 'warning');
             }
         }
-        
+
         // Update settings
         this.settings.voiceChance = parseInt(document.getElementById('voice-chance-slider').value);
         this.settings.autoRefresh = document.getElementById('auto-refresh-checkbox').checked;
         this.settings.refreshInterval = parseInt(document.getElementById('refresh-interval-slider').value) * 1000;
         this.settings.eventFrequency = parseInt(document.getElementById('event-frequency-slider').value);
         this.settings.voiceIds = voiceIds;
-        
+
         this.saveSettingsToStorage();
         this.setupAutoRefresh();
-        
+
         modal.remove();
-        
+
         window.MorrowindOS.showNotification('Settings Saved', 'WraithsApp configuration updated.', 'success');
     }
 
@@ -252,7 +255,7 @@ class WraithsApp {
             clearInterval(this.autoRefreshInterval);
             this.autoRefreshInterval = null;
         }
-        
+
         // Setup new interval if enabled
         if (this.settings.autoRefresh) {
             this.autoRefreshInterval = setInterval(() => {
@@ -279,7 +282,7 @@ class WraithsApp {
         const chatDiv = document.createElement('div');
         chatDiv.className = 'wraiths-chat-item';
         chatDiv.setAttribute('data-chat-id', chat.id);
-        
+
         const lastMessage = chat.messages.length > 0 ? chat.messages[chat.messages.length - 1] : null;
         const lastMessageText = lastMessage ? lastMessage.text : 'No messages yet';
         const lastMessageTime = lastMessage ? this.formatTime(lastMessage.ts) : '';
@@ -371,7 +374,7 @@ class WraithsApp {
         const npc = !isUser ? this.getNPCById(message.npcId) : null;
         const time = this.formatTime(message.ts);
         const hasAudio = message.hasAudio && message.audioUrl;
-        
+
         return `
             <div class="wraiths-message ${isUser ? 'user' : 'npc'}">
                 ${!isUser ? `
@@ -399,7 +402,7 @@ class WraithsApp {
         const sendBtn = document.getElementById(`wraiths-send-btn-${chat.id}`);
         const inputField = document.getElementById(`wraiths-input-${chat.id}`);
         const refreshBtn = document.getElementById('refresh-chat-btn');
-        
+
         if (sendBtn) {
             sendBtn.addEventListener('click', () => this.sendMessage(chat.id));
         }
@@ -482,10 +485,10 @@ class WraithsApp {
         try {
             // Determine number of responses (75% one, 25% two)
             const numResponses = Math.random() < 0.75 ? 1 : 2;
-            
+
             // Get recent messages for context
             const recentMessages = chat.messages.slice(-8);
-            
+
             // Check if we should include an event card
             const includeEvent = Math.random() * 100 < this.settings.eventFrequency;
             let eventCard = null;
@@ -496,7 +499,7 @@ class WraithsApp {
             for (let i = 0; i < numResponses; i++) {
                 // Select NPC (weighted random with boost if mentioned)
                 const selectedNPC = this.selectNPC(chat, userMessage);
-                
+
                 // Generate response using ChatGPT
                 const response = await this.generateNPCResponse(
                     selectedNPC,
@@ -509,7 +512,7 @@ class WraithsApp {
                 // Check if we should generate audio
                 const shouldGenerateAudio = Math.random() * 100 < this.settings.voiceChance;
                 let audioUrl = null;
-                
+
                 if (shouldGenerateAudio) {
                     audioUrl = await this.generateAudio(response, selectedNPC);
                 }
@@ -532,7 +535,7 @@ class WraithsApp {
             }
         } catch (error) {
             console.error('Error generating NPC responses:', error);
-            
+
             // Add error message
             this.addMessage(chatId, {
                 id: this.generateId(),
@@ -552,8 +555,8 @@ class WraithsApp {
         let mentionedNPC = null;
         if (userMessage) {
             const lowerMessage = userMessage.toLowerCase();
-            mentionedNPC = chat.npcs.find(npc => 
-                lowerMessage.includes(npc.name.toLowerCase()) || 
+            mentionedNPC = chat.npcs.find(npc =>
+                lowerMessage.includes(npc.name.toLowerCase()) ||
                 lowerMessage.includes(npc.role.toLowerCase())
             );
         }
@@ -569,36 +572,36 @@ class WraithsApp {
 
         const totalWeight = weights.reduce((sum, weight) => sum + weight, 0);
         let random = Math.random() * totalWeight;
-        
+
         for (let i = 0; i < chat.npcs.length; i++) {
             random -= weights[i];
             if (random <= 0) {
                 return chat.npcs[i];
             }
         }
-        
+
         return chat.npcs[0]; // Fallback
     }
 
     async generateNPCResponse(npc, chat, recentMessages, userMessage = null, eventCard = null) {
         // Get world context if available
         const worldContext = typeof WorldContextService !== 'undefined' ? WorldContextService.getWorldContextForPrompt() : '';
-        
+
         // Get current timestamp to add uniqueness
         const currentTime = new Date().toISOString();
         const randomSeed = Math.random().toString(36).substring(2, 15);
-        
+
         // Get the last 20 messages for better context
         const lastTwentyMessages = recentMessages.slice(-20);
-        
+
         // Build conversation history with proper weighting
         const conversationHistory = lastTwentyMessages.map((msg, index) => {
             const sender = msg.npcId === 'user' ? 'User' : this.getNPCById(msg.npcId)?.name || 'Unknown';
             const weight = index === lastTwentyMessages.length - 1 ? ' [MOST RECENT]' :
-                          index >= lastTwentyMessages.length - 3 ? ' [RECENT]' : '';
+                index >= lastTwentyMessages.length - 3 ? ' [RECENT]' : '';
             return `${sender}${weight}: ${msg.text}`;
         }).join('\n');
-        
+
         const systemPrompt = `${worldContext}
 
 === CHAT GROUP CONTEXT ===
@@ -648,33 +651,33 @@ Respond with ONLY the message text as ${npc.name} would say it:`;
                 temperature: this.settings.temperature + 0.2, // Increase temperature slightly for more variety
                 model: 'gpt-3.5-turbo' // Explicitly set model
             });
-            
+
             // Check if response is too similar to recent messages
             const trimmedResponse = response.trim();
             const isDuplicate = recentMessages.some(msg =>
                 msg.text.toLowerCase() === trimmedResponse.toLowerCase() ||
                 (msg.npcId === npc.id && msg.text.toLowerCase().includes(trimmedResponse.toLowerCase().substring(0, 5)))
             );
-            
+
             if (isDuplicate) {
                 console.log('Duplicate detected, regenerating...');
                 // Try once more with higher temperature
                 return await this.generateNPCResponseWithRetry(npc, chat, recentMessages, userMessage, eventCard, 1);
             }
-            
+
             return trimmedResponse;
         } catch (error) {
             console.error('Error generating NPC response:', error);
             throw error;
         }
     }
-    
+
     async generateNPCResponseWithRetry(npc, chat, recentMessages, userMessage = null, eventCard = null, retryCount = 0) {
         if (retryCount >= 2) {
             // Fallback response after 2 retries
             return `${npc.name}: ${this.getFallbackResponse(npc, chat)}`;
         }
-        
+
         const randomSeed = Math.random().toString(36).substring(2, 15);
         const systemPrompt = `Generate a UNIQUE WhatsApp-style line for ${npc.name} (${npc.role}, ${npc.quirk}).
         Chat: ${chat.title} (${chat.mood} mood).
@@ -689,14 +692,14 @@ Respond with ONLY the message text as ${npc.name} would say it:`;
                 temperature: 0.9 + (retryCount * 0.1), // Increase temperature with each retry
                 model: 'gpt-3.5-turbo'
             });
-            
+
             return response.trim();
         } catch (error) {
             console.error(`Retry ${retryCount + 1} failed:`, error);
             return await this.generateNPCResponseWithRetry(npc, chat, recentMessages, userMessage, eventCard, retryCount + 1);
         }
     }
-    
+
     getFallbackResponse(npc, chat) {
         const fallbackResponses = {
             'formal': ['The council will reconvene shortly.', 'We must consider all perspectives.', 'This matter requires further deliberation.'],
@@ -706,7 +709,7 @@ Respond with ONLY the message text as ${npc.name} would say it:`;
             'brisk': ['Time is of the essence.', 'Let us proceed with purpose.', 'Efficiency in all things.'],
             'eccentric': ['Fascinating dimensional shifts!', 'The arcane currents flow strangely today.', 'Reality seems quite malleable!']
         };
-        
+
         const moodResponses = fallbackResponses[chat.mood] || fallbackResponses['formal'];
         return moodResponses[Math.floor(Math.random() * moodResponses.length)];
     }
@@ -719,17 +722,17 @@ Respond with ONLY the message text as ${npc.name} would say it:`;
                 console.warn('ElevenLabs API key not configured, skipping audio generation');
                 return null;
             }
-            
+
             // Use NPC's voiceId or select a random one
             const voiceId = npc.voiceId || ElevenLabsService.getRandomVoiceId();
-            
+
             // Generate speech with random variations
             const result = await ElevenLabsService.generateSpeech(text, voiceId, {
                 stability: 0.35 + Math.random() * 0.2, // 0.35-0.55
                 style: 0.1 + Math.random() * 0.2, // 0.1-0.3
                 useSpeakerBoost: true
             });
-            
+
             if (result.success) {
                 console.log('Audio generated successfully for', npc.name);
                 return result.audioUrl;
@@ -818,11 +821,11 @@ Respond with ONLY the message text as ${npc.name} would say it:`;
                 'Sixth House activity detected near major cities'
             ]
         };
-        
+
         // Select a category based on current chat mood or random
         const categories = Object.keys(events);
         let selectedCategory;
-        
+
         // Try to match category to chat mood if possible
         const moodToCategory = {
             'mysterious': 'mysterious',
@@ -832,7 +835,7 @@ Respond with ONLY the message text as ${npc.name} would say it:`;
             'academic': 'economic',
             'unsettling': 'supernatural'
         };
-        
+
         // Get current chat to determine mood
         const currentChat = this.chats.find(c => c.id === this.currentChatId);
         if (currentChat && moodToCategory[currentChat.mood]) {
@@ -840,7 +843,7 @@ Respond with ONLY the message text as ${npc.name} would say it:`;
         } else {
             selectedCategory = categories[Math.floor(Math.random() * categories.length)];
         }
-        
+
         const categoryEvents = events[selectedCategory];
         return categoryEvents[Math.floor(Math.random() * categoryEvents.length)];
     }
@@ -850,14 +853,14 @@ Respond with ONLY the message text as ${npc.name} would say it:`;
         if (!chat) return;
 
         chat.messages.push(message);
-        
+
         // Keep only last 200 messages
         if (chat.messages.length > 200) {
             chat.messages = chat.messages.slice(-200);
         }
 
         this.saveChats();
-        
+
         // Update UI if this chat is currently open
         if (this.currentChatId === chatId) {
             const messagesContainer = document.getElementById(`wraiths-messages-${chatId}`);
@@ -865,12 +868,12 @@ Respond with ONLY the message text as ${npc.name} would say it:`;
                 const messageElement = document.createElement('div');
                 messageElement.innerHTML = this.renderMessage(message);
                 messagesContainer.appendChild(messageElement.firstElementChild);
-                
+
                 // Scroll to bottom
                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
             }
         }
-        
+
         // Update chat list
         this.updateChatListItem(chatId);
     }
@@ -892,10 +895,10 @@ Respond with ONLY the message text as ${npc.name} would say it:`;
 
     setLoading(isLoading) {
         this.isLoading = isLoading;
-        
+
         const sendBtn = document.getElementById(`wraiths-send-btn-${this.currentChatId}`);
         const inputField = document.getElementById(`wraiths-input-${this.currentChatId}`);
-        
+
         if (sendBtn) sendBtn.disabled = isLoading;
         if (inputField) inputField.disabled = isLoading;
     }
@@ -913,16 +916,16 @@ Respond with ONLY the message text as ${npc.name} would say it:`;
         const now = new Date();
         const diffMs = now - date;
         const diffMins = Math.floor(diffMs / 60000);
-        
+
         if (diffMins < 1) return 'just now';
         if (diffMins < 60) return `${diffMins}m ago`;
-        
+
         const diffHours = Math.floor(diffMins / 60);
         if (diffHours < 24) return `${diffHours}h ago`;
-        
+
         const diffDays = Math.floor(diffHours / 24);
         if (diffDays < 7) return `${diffDays}d ago`;
-        
+
         return date.toLocaleDateString();
     }
 
@@ -1330,7 +1333,7 @@ Respond with ONLY the message text as ${npc.name} would say it:`;
             clearInterval(this.autoRefreshInterval);
             this.autoRefreshInterval = null;
         }
-        
+
         // Save any pending data
         this.saveChats();
         this.saveSettingsToStorage();
@@ -1340,7 +1343,7 @@ Respond with ONLY the message text as ${npc.name} would say it:`;
 // Register app initialization function
 window.MorrowindOS = window.MorrowindOS || {};
 window.MorrowindOS.apps = window.MorrowindOS.apps || {};
-window.MorrowindOS.apps.wraiths = function(windowId) {
+window.MorrowindOS.apps.wraiths = function (windowId) {
     window.wraithsApp = new WraithsApp(windowId);
 };
 

@@ -103,6 +103,9 @@ class OuijaGPTApp {
                 <div class="modal-header">OuijaGPT Configuration</div>
                 <div class="modal-body">
                     <p>To consult OuijaGPT, you need an OpenAI API key.</p>
+                    <div class="api-security-warning">
+                        <p><strong>⚠️ Security Notice:</strong> Your API key will be stored in browser session storage and automatically cleared when you close this tab. Keys are never stored on our servers.</p>
+                    </div>
                     <p>You can get one from <a href="https://platform.openai.com/api-keys" target="_blank">OpenAI's website</a>.</p>
                     <div class="form-group">
                         <label for="api-key-input">API Key:</label>
